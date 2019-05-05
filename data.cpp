@@ -73,7 +73,6 @@ class Date
    if(day< 0)
    {
      return *this += -day;
-     //return *this;
    }
 
    _day -= day;
@@ -81,7 +80,7 @@ class Date
    while(_day < 1)
    {
      --_month;
-     // _month ?= 0
+     //_month ?= 0
      if(_month == 0)
      {
        _month = 12;
@@ -92,20 +91,18 @@ class Date
    return *this;
  }
 
- //first ++
+ //++Date
  Date& operator++()
  {
-   Date tmp(*this);
-   tmp += 1;
-   return tmp;
+   return *this += 1;
  }
 
- //last ++
+ //Date++
  Date operator++(int)
  {
    Date tmp(*this);
-   return *this;
-   tmp += 1;
+   *this += 1;
+   return tmp;
  }
 
 
@@ -122,26 +119,129 @@ class Date
    tmp -= day;
    return tmp;
  }
+ 
+ //--Date
+ Date& operator--()
+ {
+   return *this -= 1;
+ }
 
- //bint operator-(const Date& d);
- //Date operator++(int) { Date& operator--();
- //Date operator--(int);
- //bool operator>(const Date& d)const;
- //bool operator>=(const Date& d)const;
- //bool operator<(const Date& d)const;
- //bool operator<=(const Date& d)const;
- //bool operator==(const Date& d)const;
- //bool operator!=(const Date& d)const;
+ //Date--
+ Date operator--(int)
+ {
+   Date tmp(*this);
+   *this -= 1;
+   return tmp;
+ }
+
+
+ bool operator>(const Date& d)const
+ {
+   if(this->_year > d._year)
+   {
+     return true;
+   }
+   else if(_year == d._year)
+   {
+     if(_month > d._month)
+     {
+       return true;
+     }
+     else if(_month == d._month)
+     {
+       if(_day > d._day)
+         return true;
+     }
+   }
+   return false;
+ }
+
+ bool operator>=(const Date& d)const
+ {
+   return (*this > d) || (*this == d);
+ }
+
+
+ bool operator<(const Date& d)const
+ {
+   return !(*this >= d);
+ }
+
+
+ bool operator<=(const Date& d)const
+ {
+   return (*this < d) || (*this == d);
+ }
+
+
+ bool operator==(const Date& d)const
+ {
+   _year == d._year && _month == d._month && _day == d._day;
+ }
+ bool operator!=(const Date& d)const
+ {
+   return !(*this == d);
+ }
+
+ int operator-(const Date& d)
+ {
+   Date tmp(*this);
+   int flag = 1;
+   if(tmp < d)
+     flag = -1;
+   int day;
+   if(tmp < d)
+   {
+     while(tmp < d)
+     {
+        ++tmp;
+        ++day;
+     }
+   }
+   else{
+     while(tmp > d)
+     {
+       --tmp;
+       ++day;
+     }
+   }
+ }
+
+ void display()
+ {
+   cout << _year << "-" << _month << "-"<< _day << endl;
+
+ }
+
+
 private:
  int _year;
  int _month;
  int _day;
 };
 
+void testDate()
+{
+  Date d1(2019,1,30);
+  Date d2(2018,1,30);
+
+  d1++;
+  cout << "d1(2019, 1, 30) ++ :" << endl;
+  d1.display();
+  d2--;
+  cout << "d2(2019, 2,28) -- :" << endl;
+  d2.display();
+  Date d3 = d1 + 62;
+  cout << "d1(2019, 1, 30) ++  + 62:" << endl;
+  d3.display();
+  Date d4 = d2 - 39; 
+  cout << "d1(2019, 1, 30) -- - 39:" << endl;
+  d4.display();
+}
+
 int main()
 {
-  Date d1(2019,3);
-  Date d2(2018,3);
+  testDate();
 
   return 0;
 }
